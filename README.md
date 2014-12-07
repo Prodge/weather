@@ -9,6 +9,10 @@ Written for use with bar using baskerville's panel scripts for bspwm
 Currently a work in progress.
 
 
+    Dependencies
+        - libcurl4-openssl-dev
+
+
 Todo:
 - Add support for city input or coord input
 - Add formatting support
