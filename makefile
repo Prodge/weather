@@ -1,13 +1,17 @@
-CC=cc
-CFLAGS= -std=c99 -pedantic
+COMPILER = cc
+FLAGS = -std=c99 -Wall -Werror -pedantic -c
+EXE = weather
 
-all: weather
+all: $(EXE)
 
 weather: weather.o; \
-    $(CC) weather.o -o weather
+     $(COMPILER) -o $(EXE) -L/usr/local/lib -lcurl -I/usr/local/include weather.o
 
 weather.o: weather.c; \
-    $(CC) $(CFLAGS) weather.c
+      $(COMPILER) $(FLAGS) weather.c
 
 clean:; \
-    rm -rf *.o weather
+    rm -rf *.o $(EXE)
+
+run:; \
+    ./$(EXE)
