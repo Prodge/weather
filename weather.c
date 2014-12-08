@@ -108,8 +108,34 @@ char *getValue(char *class, char *type, int classLen, int typeLen, struct string
     return value;
 }
 
-int main(){
-    char *url = "http://api.openweathermap.org/data/2.5/weather?q=perth&mode=xml";
+char *getUrlCity(char *url, char *city){
+    char *pre = "http://api.openweathermap.org/data/2.5/weather?q=";
+    char *post = "&mode=xml";
+    int preLen = strlen(pre);
+    int cityLen = strlen(city);
+    int postLen = strlen(post);
+    url = (char *) malloc(preLen + cityLen + postLen + 1);
+    for(int i=0; i<preLen; i++){
+        url[i] = pre[i];
+    }
+    for(int i=0; i<cityLen; i++){
+        url[preLen + i] = city[i];
+    }
+    for(int i=0; i<postLen; i++){
+        url[preLen + cityLen + i] = post[i];
+    }
+    //Appending a null byte at the end of the string
+    char *null = "\0";
+    url[preLen + cityLen + postLen] = null[0];
+    return url;
+}
+
+int main(int argc, char **argv){
+    char *url = ""; 
+    char *city = "perth";
+    url = getUrlCity(url, city);
+    printf("URL: %s\n", url);
+
     struct string s = scrape(url, s);
     //printf("Output:\n%s\n", s.ptr);
     printf("Temperature: %s\n", getValue("temperature", "value", 11, 5, s));
@@ -117,3 +143,10 @@ int main(){
     printf("Weather: %s\n", getValue("weather", "value", 7, 5, s));
     free(s.ptr);
 }
+
+/*
+    -c cityname
+    -C lon,lat
+
+
+   */
