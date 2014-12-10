@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <curl/curl.h>
+#include <getopt.h>
 
 struct string {
     char *ptr;
@@ -130,21 +131,53 @@ char *getUrlCity(char *url, char *city){
     return url;
 }
 
-int main(int argc, char **argv){
-    char *url = ""; 
-    char *city = "perth";
-    url = getUrlCity(url, city);
-    printf("URL: %s\n", url);
+char *malStrCpy(char *s){
+    char *dest;
+    int sLen = strlen(s);
+    dest = (char *) malloc(sLen + 1);
+    for(int i=0; i<sLen; i++){
+        dest[i] = s[i];
+    }
+    char *null = "\0";
+    dest[sLen] = null[0];
+    return dest;
+}
 
+int main(int argc, char **argv){
+    char *city;
+    char *url = ""; 
+    bool subscribe = false;
+    int localType= 0; // set to 0 for inadequate input, 1 for city, 2 for coords
+    int c;
+    while((c = getopt(argc, argv, "c:C:s")) != -1){
+        switch(c){
+            case 's':
+                subscribe = true;
+                printf("Subscribe: %d\n", subscribe);
+                break;
+            case 'c':
+                city = malStrCpy(optarg);
+                printf("City: %s\n", city);
+                localType = 1;
+                url = getUrlCity(url, city);
+                break;
+            case 'C':
+                /*Get coords from optarg*/
+                /*Get url from coords*/
+                localType = 2;
+                break;
+        }
+    }
+
+    if(localType == 0){ //Reciecieved no location information
+        fprintf(stderr, "You did not enter enough information.. A city or coordinates are required.\n");
+        exit( EXIT_FAILURE );
+    }
+
+    printf("URL: %s\n", url);
     struct string s = scrape(url, s);
-    //printf("Output:\n%s\n", s.ptr);
     printf("Temperature: %s\n", getValue("temperature", "value", 11, 5, s));
     printf("Wind Speed: %s\nWind Direction: %s\n", getValue("speed", "name", 5, 4, s), getValue("direction", "code", 8, 4, s));
     printf("Weather: %s\n", getValue("weather", "value", 7, 5, s));
     free(s.ptr);
 }
-/*
-    -c cityname
-    -C lon,lat
-
-   */
