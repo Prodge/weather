@@ -143,7 +143,6 @@ int main(int argc, char **argv){
     printf("Weather: %s\n", getValue("weather", "value", 7, 5, s));
     free(s.ptr);
 }
-
 /*
     -c cityname
     -C lon,lat
