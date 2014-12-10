@@ -1,3 +1,5 @@
+Currently a work in progress.
+
 Weather
 =======
 
@@ -9,7 +11,8 @@ Written for use with bar using baskerville's panel scripts for bspwm
 Currently a work in progress.
 
 
-    Dependencies
+Dependencies
+====
         - libcurl4-openssl-dev
 
 
@@ -23,3 +26,4 @@ Todo:
     - Installing
     - Running with baskervilles panel script
     - Running with bar (basic script)
+    - Running with conky
