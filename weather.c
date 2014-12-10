@@ -147,5 +147,4 @@ int main(int argc, char **argv){
     -c cityname
     -C lon,lat
 
-
    */
