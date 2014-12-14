@@ -13,15 +13,15 @@ Currently a work in progress.
 
 Dependencies
 ====
-        - libcurl4-openssl-dev
+- libcurl4-openssl-dev
 
 
 Todo:
-- Add support for city input or coord input
 - Add formatting support
 - Create a Makefile with install
 - A support for different units
 - Autodetect location?
+- Write a man page
 - Create instructions for:
     - Installing
     - Running with baskervilles panel script
