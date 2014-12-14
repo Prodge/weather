@@ -11,6 +11,10 @@ struct string {
     size_t len;
 };
 
+struct coords {
+    char lat[4];
+    char lon[4];
+};
 
 void init_string(struct string *s) {
     s->len = 0;
@@ -109,6 +113,45 @@ char *getValue(char *class, char *type, int classLen, int typeLen, struct string
     return value;
 }
 
+/*Assumes the form of "lon,lat"*/
+struct coords getCoords(char *s){
+    struct coords coord;
+    int seperator = 0;
+    int lenS = strlen(s);
+    /*figuring out where the ',' is for*/
+    for(int i=0; i<lenS; i++){
+        if(s[i] == ','){
+            seperator = i;
+            break;
+        }
+    }
+    if(seperator == 0){
+        fprintf(stderr, "Invalid Coordinates, Could not find ','\n");
+        exit( EXIT_FAILURE );
+    }
+    /*initialize coords to 000*/
+    for(int i=0; i<3; i++){
+        coord.lat[i]='0';
+        coord.lon[i]='0';
+    }
+    /*copying the coords into the struct*/
+    int count = 2;
+    for(int i=seperator-1; i>=0; i--){
+        coord.lat[count] = s[i];
+        count--;
+    }
+    count = 2;
+    for(int i=lenS-1; i>seperator; i--){
+        coord.lon[count] = s[i];
+        count--;
+    }
+    /*Terminating strings with null bytes*/
+    char *null = "\0";
+    coord.lat[3] = null[0];
+    coord.lon[3] = null[0];
+    return coord;
+}
+
 char *getUrlCity(char *url, char *city){
     char *pre = "http://api.openweathermap.org/data/2.5/weather?q=";
     char *post = "&mode=xml";
@@ -116,18 +159,28 @@ char *getUrlCity(char *url, char *city){
     int cityLen = strlen(city);
     int postLen = strlen(post);
     url = (char *) malloc(preLen + cityLen + postLen + 1);
-    for(int i=0; i<preLen; i++){
-        url[i] = pre[i];
-    }
-    for(int i=0; i<cityLen; i++){
-        url[preLen + i] = city[i];
-    }
-    for(int i=0; i<postLen; i++){
-        url[preLen + cityLen + i] = post[i];
-    }
+    strcat(url, pre);
+    strcat(url, city);
+    strcat(url, post);
     //Appending a null byte at the end of the string
     char *null = "\0";
-    url[preLen + cityLen + postLen] = null[0];
+    url[strlen(url)] = null[0];
+    return url;
+}
+
+char *getUrlCoords(char *url, struct coords coord){
+    char *pre = "http://api.openweathermap.org/data/2.5/weather?lat=";
+    char *mid = "&lon=";
+    char *post = "&mode=xml";
+    url = (char *) malloc(strlen(pre) + strlen(coord.lat) + strlen(mid) + strlen(coord.lon) + strlen(post));
+    strcat(url, pre);
+    strcat(url, coord.lat);
+    strcat(url, mid);
+    strcat(url, coord.lon);
+    strcat(url, post);
+    //Appending a null byte at the end of the string
+    char *null = "\0";
+    url[strlen(url)] = null[0];
     return url;
 }
 
@@ -149,6 +202,7 @@ int main(int argc, char **argv){
     bool subscribe = false;
     int localType= 0; // set to 0 for inadequate input, 1 for city, 2 for coords
     int c;
+    struct coords coord;
     while((c = getopt(argc, argv, "c:C:s")) != -1){
         switch(c){
             case 's':
@@ -162,8 +216,10 @@ int main(int argc, char **argv){
                 url = getUrlCity(url, city);
                 break;
             case 'C':
-                /*Get coords from optarg*/
-                /*Get url from coords*/
+                coord = getCoords(optarg);
+                printf("Optarg: %s\n", optarg);
+                printf("%s  :  %s\n", coord.lat, coord.lon);
+                url = getUrlCoords(url, coord);
                 localType = 2;
                 break;
         }
