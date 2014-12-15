@@ -62,7 +62,9 @@ struct string scrape(char *url, struct string s){
 }
 
 /*Returns the value from the xml that is pointed to by the passed variables*/
-char *getValue(char *class, char *type, int classLen, int typeLen, struct string s){
+char *getValue(char *class, char *type, struct string s){
+    int classLen = strlen(class);
+    int typeLen = strlen(type);
     int pos = 0;
     //searching for class
     for(int i=0; i<s.len; i++){
@@ -202,13 +204,16 @@ char *malStrCpy(char *s){
 }
 
 int main(int argc, char **argv){
+    /*Setting up core variables*/
     char *city;
     char *url = ""; 
     int subscribe = 0; // set to 0 for no subscribe
     int localType = 0; // set to 0 for inadequate input, 1 for city, 2 for coords
-    int c;
     struct coords coord;
-    while((c = getopt(argc, argv, "c:C:s:")) != -1){
+    char *format;
+    int c;
+    /*Reading user args*/
+    while((c = getopt(argc, argv, "c:C:s:f:")) != -1){
         switch(c){
             case 's':
                 subscribe = atoi(optarg);
@@ -222,23 +227,110 @@ int main(int argc, char **argv){
                 break;
             case 'C':
                 coord = getCoords(optarg);
-                printf("Optarg: %s\n", optarg);
                 printf("%s  :  %s\n", coord.lat, coord.lon);
                 url = getUrlCoords(url, coord);
                 localType = 2;
                 break;
+            case 'f':
+                format = malStrCpy(optarg);
+                printf("Format String: %s\n", format);
+                break;
         }
     }
-
-    if(localType == 0){ //Reciecieved no location information
+    if(localType == 0){ //Recieved no location information
         fprintf(stderr, "You did not enter enough information.. A city or coordinates are required.\n");
         exit( EXIT_FAILURE );
     }
-
-    printf("URL: %s\n", url);
-    struct string s = scrape(url, s);
-    printf("Temperature: %s\n", getValue("temperature", "value", 11, 5, s));
-    printf("Wind Speed: %s\nWind Direction: %s\n", getValue("speed", "name", 5, 4, s), getValue("direction", "code", 8, 4, s));
-    printf("Weather: %s\n", getValue("weather", "value", 7, 5, s));
+    struct string s = scrape(url, s); //scraping the desired url into a string 's'
+    int thisChar = 0; 
+    while(true){
+        char character = ' ';
+        character = format[thisChar];
+        if(character == '%'){
+            thisChar++;
+            character = format[thisChar]; //getting the next character
+            switch(character){  //move this to a new function
+                case 'c': // City Name
+                    printf("%s", getValue("city", "name", s));
+                    break;
+                case 'C': // Coordinates
+                    printf("%s,%s", getValue("coord", "lat", s), getValue("coord", "lon", s));
+                    break;
+                case 'l': // Latitude
+                    printf("%s", getValue("coord", "lat", s));
+                    break;
+                case 'L': // Longitude
+                    printf("%s", getValue("coord", "lon", s));
+                    break;
+                case 'n': // New line character
+                    printf("\n");
+                    break;
+                case 'u': // Print the URL
+                    printf("%s", url);
+                    break;
+                /*case 'N': // Null byte character*/
+                    /*printf("\0");*/
+                    /*break;*/
+                case 's': // Sunrise time
+                    printf("%s", getValue("", "", s));
+                    break;
+                case 'S': // Sunset Time
+                    printf("%s", getValue("", "", s));
+                    break;
+                case 't': // Current Temperature
+                    printf("%s", getValue("", "", s));
+                    break;
+                case 'h': // Current Humidity
+                    printf("%s", getValue("", "", s));
+                    break;
+                case 'p': // Current Air Prussure
+                    printf("%s", getValue("", "", s));
+                    break;
+                case 'w': // Wind Speed
+                    printf("%s", getValue("", "", s));
+                    break;
+                case 'W': // Wind Descriptor
+                    printf("%s", getValue("", "", s));
+                    break;
+                case 'd': // Wind direction abreviated
+                    printf("%s", getValue("", "", s));
+                    break;
+                case 'D': // Wind direction
+                    printf("%s", getValue("", "", s));
+                    break;
+                case 'a': // wind angle
+                    printf("%s", getValue("", "", s));
+                    break;
+                case 'x': // Country
+                    printf("%s", getValue("", "", s));
+                    break;
+                case 'r': // Raining
+                    printf("%s", getValue("", "", s));
+                    break;
+                case 'k': // Cloud coverage %
+                    printf("%s", getValue("", "", s));
+                    break;
+                case 'K': // cloud coverage descriptor
+                    printf("%s", getValue("", "", s));
+                    break;
+                case 'i': // Weather descriptor
+                    printf("%s", getValue("", "", s));
+                    break;
+                case 'U': // Last updated
+                    printf("%s", getValue("", "", s));
+                    break;
+                case '%': // percentage sign
+                    printf("%s", getValue("", "", s));
+                    break;
+            }   
+        }else{ // Character is not specifying a variable, probably user formating
+            printf("%c", character);
+        }
+        thisChar++;
+        if(character == '\0'){
+            printf("\n");
+            break;
+        }
+    }
     free(s.ptr);
 }
