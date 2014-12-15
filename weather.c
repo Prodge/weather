@@ -16,6 +16,7 @@ struct coords {
     char lon[4];
 };
 
+/*Initializes the string structure*/
 void init_string(struct string *s) {
     s->len = 0;
     s->ptr = malloc(s->len+1);
@@ -26,6 +27,7 @@ void init_string(struct string *s) {
     s->ptr[0] = '\0';
 }
 
+/*writing function for copying the curl output to the given string*/
 size_t writefunc(void *ptr, size_t size, size_t nmemb, struct string *s)
 {
     size_t new_len = s->len + size*nmemb;
@@ -40,13 +42,13 @@ size_t writefunc(void *ptr, size_t size, size_t nmemb, struct string *s)
     return size*nmemb;
 }
 
+/*Returns xml as a string from the given url*/
 struct string scrape(char *url, struct string s){
     CURL *curl;
     CURLcode res;
     curl = curl_easy_init();
     if(curl) {
         init_string(&s);
-        //curl_easy_setopt(curl, CURLOPT_URL, "http://api.openweathermap.org/data/2.5/weather?q=perth&mode=xml");
         curl_easy_setopt(curl, CURLOPT_URL, url);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
@@ -59,7 +61,7 @@ struct string scrape(char *url, struct string s){
     return s;
 }
 
-//Returns the value from the xml that is pointed to by the passed variables
+/*Returns the value from the xml that is pointed to by the passed variables*/
 char *getValue(char *class, char *type, int classLen, int typeLen, struct string s){
     int pos = 0;
     //searching for class
@@ -113,7 +115,7 @@ char *getValue(char *class, char *type, int classLen, int typeLen, struct string
     return value;
 }
 
-/*Assumes the form of "lon,lat"*/
+/*Returns a coords stucture from a string of the form "lat,lon" */
 struct coords getCoords(char *s){
     struct coords coord;
     int seperator = 0;
@@ -152,6 +154,7 @@ struct coords getCoords(char *s){
     return coord;
 }
 
+/*Returns an openweathermap url for the given city*/
 char *getUrlCity(char *url, char *city){
     char *pre = "http://api.openweathermap.org/data/2.5/weather?q=";
     char *post = "&mode=xml";
@@ -168,6 +171,7 @@ char *getUrlCity(char *url, char *city){
     return url;
 }
 
+/*Returns an openweathermap url with the given coordinates*/
 char *getUrlCoords(char *url, struct coords coord){
     char *pre = "http://api.openweathermap.org/data/2.5/weather?lat=";
     char *mid = "&lon=";
@@ -184,6 +188,7 @@ char *getUrlCoords(char *url, struct coords coord){
     return url;
 }
 
+/*Allocates space for the given string, copys the given string to the new location and returns it*/
 char *malStrCpy(char *s){
     char *dest;
     int sLen = strlen(s);
@@ -199,15 +204,15 @@ char *malStrCpy(char *s){
 int main(int argc, char **argv){
     char *city;
     char *url = ""; 
-    bool subscribe = false;
-    int localType= 0; // set to 0 for inadequate input, 1 for city, 2 for coords
+    int subscribe = 0; // set to 0 for no subscribe
+    int localType = 0; // set to 0 for inadequate input, 1 for city, 2 for coords
     int c;
     struct coords coord;
-    while((c = getopt(argc, argv, "c:C:s")) != -1){
+    while((c = getopt(argc, argv, "c:C:s:")) != -1){
         switch(c){
             case 's':
-                subscribe = true;
-                printf("Subscribe: %d\n", subscribe);
+                subscribe = atoi(optarg);
+                printf("Subscribe: %i\n", subscribe);
                 break;
             case 'c':
                 city = malStrCpy(optarg);
