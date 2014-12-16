@@ -221,13 +221,11 @@ int main(int argc, char **argv){
                 break;
             case 'c':
                 city = malStrCpy(optarg);
-                printf("City: %s\n", city);
                 localType = 1;
                 url = getUrlCity(url, city);
                 break;
             case 'C':
                 coord = getCoords(optarg);
-                printf("%s  :  %s\n", coord.lat, coord.lon);
                 url = getUrlCoords(url, coord);
                 localType = 2;
                 break;
@@ -272,55 +270,58 @@ int main(int argc, char **argv){
                     /*printf("\0");*/
                     /*break;*/
                 case 's': // Sunrise time
-                    printf("%s", getValue("", "", s));
+                    printf("%s", getValue("sun", "rise", s));
                     break;
                 case 'S': // Sunset Time
-                    printf("%s", getValue("", "", s));
+                    printf("%s", getValue("sun", "set", s));
                     break;
-                case 't': // Current Temperature
-                    printf("%s", getValue("", "", s));
+                case 't': // Current Temperature in K
+                    printf("%s", getValue("temperature", "value", s));  
+                    break;
+                case 'T': // Current Temperature in C 
+                    printf("%s", getValue("temperature", "value", s)); // Conversion needs to be added 
+                    break;
+                case 'f': // Current Temperature in F
+                    printf("%s", getValue("temperature", "value", s));  // Conversion needs to be added
                     break;
                 case 'h': // Current Humidity
-                    printf("%s", getValue("", "", s));
+                    printf("%s", getValue("humidity", "value", s));
                     break;
                 case 'p': // Current Air Prussure
-                    printf("%s", getValue("", "", s));
+                    printf("%s", getValue("pressure", "value", s));
                     break;
                 case 'w': // Wind Speed
-                    printf("%s", getValue("", "", s));
+                    printf("%s", getValue("speed", "value", s));
                     break;
                 case 'W': // Wind Descriptor
-                    printf("%s", getValue("", "", s));
+                    printf("%s", getValue("speed", "name", s));
                     break;
                 case 'd': // Wind direction abreviated
-                    printf("%s", getValue("", "", s));
+                    printf("%s", getValue("direction", "code", s));
                     break;
                 case 'D': // Wind direction
-                    printf("%s", getValue("", "", s));
+                    printf("%s", getValue("direction", "name", s));
                     break;
                 case 'a': // wind angle
-                    printf("%s", getValue("", "", s));
-                    break;
-                case 'x': // Country
-                    printf("%s", getValue("", "", s));
+                    printf("%s", getValue("direction", "value", s));
                     break;
                 case 'r': // Raining
-                    printf("%s", getValue("", "", s));
+                    printf("%s", getValue("precipitation", "mode", s));
                     break;
                 case 'k': // Cloud coverage %
-                    printf("%s", getValue("", "", s));
+                    printf("%s", getValue("clouds", "value", s));
                     break;
                 case 'K': // cloud coverage descriptor
-                    printf("%s", getValue("", "", s));
+                    printf("%s", getValue("clouds", "name", s));
                     break;
                 case 'i': // Weather descriptor
-                    printf("%s", getValue("", "", s));
+                    printf("%s", getValue("weather", "value", s));
                     break;
                 case 'U': // Last updated
-                    printf("%s", getValue("", "", s));
+                    printf("%s", getValue("lastupdate", "value", s));
                     break;
                 case '%': // percentage sign
-                    printf("%s", getValue("", "", s));
+                    printf("%%");
                     break;
             }   
         }else{ // Character is not specifying a variable, probably user formating
