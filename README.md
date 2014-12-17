@@ -15,7 +15,7 @@ Weather uses the openweathermap.org API http://openweathermap.org/current
 - You can compile it for yourself using 'make'
 
 ####Use
-- Simply type 'weather' in your prefered terminal
+- Simply type 'weather' in your prefered terminal followed by your desired arguments
 - weather will take the following arguments:
     - -s [sec]: (subscribe) will ping for and reprint your specified weather information every [sec] seconds
     - -c [city]: Specifies the city to get weather information for
