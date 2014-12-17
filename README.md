@@ -11,7 +11,11 @@ Weather uses the openweathermap.org API http://openweathermap.org/current
 
 ###How to:
 ####Install
-To install weather, you will have to have git installed to clone this repository, then run:
+To install weather, first install the dependencies with your package manager
+```
+sudo apt-get install git libcurl4-openssl-dev
+```
+Then run these commands to clone this repository, compile weather for your system and run the installation scripts
 ```
 git clone https://github.com/Prodge/weather.git
 cd weather
