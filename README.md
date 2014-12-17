@@ -1,13 +1,13 @@
 ##Weather
 Returns current weather information in a formattable string.
 
-Written for use with bar using baskerville's panel scripts for bspwm
-(https://github.com/baskerville/bspwm/tree/master/examples/panel)
+Written for use with bar using baskerville's panel scripts for bspwm (https://github.com/baskerville/bspwm/tree/master/examples/panel) however you can use it for whatever you like.
 
 Weather uses the openweathermap.org API http://openweathermap.org/current
 
 ###Dependencies
 - libcurl4-openssl-dev
+- Linux
 
 ###How to:
 ####Install
@@ -20,7 +20,7 @@ sudo make installman
 ```
 The last command installs a manpage for weather, if you do not have man installed or do not want this then simply do not run that command. If it gives you an error when you do run it then dont worry, all of that information is present in the readme.
 
-Alternatively you can compile it for yourself using 'make' and copy the 'weather' binary to your desired location
+Alternatively you can compile it for yourself using 'make' and copy the 'weather' binary to your desired location.
 
 If you do not wish to install git, you can dewnload this repository as a zip (button to the right), extract it, and run the commands above (except for the first one).
 
@@ -95,6 +95,8 @@ It is light rain at Harrington Park. Wind is Calm in a West-southwest direction
 ###Uninstallation
 Run these commands to uninstall both the binary and the man page, if you did not install the man page initially then you only need to run the first:
 ```
+git clone https://github.com/Prodge/weather.git
+cd weather
 sudo make uninstall
 sudo make uninstallman
 ```
