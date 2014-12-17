@@ -11,8 +11,18 @@ Weather uses the openweathermap.org API http://openweathermap.org/current
 
 ###How to:
 ####Install
-- This functionality is currently not availible and will be added to the makefile soon. 
-- You can compile it for yourself using 'make'
+To install weather, you will have to have git installed to clone this repository, then run:
+```
+git clone https://github.com/Prodge/weather.git
+cd weather
+sudo make install
+sudo make installman
+```
+The last command installs a manpage for weather, if you do not have man installed or do not want this then simply do not run that command. If it gives you an error when you do run it then dont worry, all of that information is present in the readme.
+
+Alternatively you can compile it for yourself using 'make' and copy the 'weather' binary to your desired location
+
+If you do not wish to install git, you can dewnload this repository as a zip (button to the right), extract it, and run the commands above (except for the first one).
 
 ####Use
 - Simply type 'weather' in your prefered terminal followed by your desired arguments
@@ -72,14 +82,19 @@ It is light rain at Harrington Park. Wind is Calm in a West-southwest direction
 - Coming Soon
 
 ###Todo:
-- Create a Makefile with install
-- Autodetect location?
-- Write a man page
+- Autodetect location
 - Create instructions for:
-    - Installing
     - Running with baskervilles panel script
     - Running with bar (basic script)
     - Running with conky
 
 ###Known Bugs
 - Coordinates cannot contain a decimal point
+- If a location is not found, the message returned is "Could not find given class in function getValue()"
+
+###Uninstallation
+Run these commands to uninstall both the binary and the man page, if you did not install the man page initially then you only need to run the first:
+```
+sudo make uninstall
+sudo make uninstallman
+```
