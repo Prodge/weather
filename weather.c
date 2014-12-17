@@ -321,14 +321,13 @@ int main(int argc, char **argv){
     int subscribe = 0;
     int localType = 0; // set to 0 for inadequate input, 1 for city, 2 for coords
     struct coords coord;
-    char *format;
+    char *format = "%t";
     int c;
     /*Reading user args*/
     while((c = getopt(argc, argv, "c:C:s:S:f:")) != -1){
         switch(c){
             case 's':   //Subscribe in seconds
                 subscribe = atoi(optarg);
-                printf("Subscribe: %i\n", subscribe);
                 break;
             case 'c':   //City
                 city = malStrCpy(optarg);
@@ -345,7 +344,6 @@ int main(int argc, char **argv){
                 break;
             case 'f':   //Format String
                 format = malStrCpy(optarg);
-                printf("Format String: %s\n", format);
                 break;
         }
     }
