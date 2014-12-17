@@ -220,7 +220,7 @@ int main(int argc, char **argv){
                 printf("Subscribe: %i\n", subscribe);
                 break;
             case 'c':
-                city = malStrCpy(optarg);
+                city = malStrCpy(optarg);       //Need to make sure this is lowercase
                 localType = 1;
                 url = getUrlCity(url, city);
                 break;
@@ -266,9 +266,9 @@ int main(int argc, char **argv){
                 case 'u': // Print the URL
                     printf("%s", url);
                     break;
-                /*case 'N': // Null byte character*/
-                    /*printf("\0");*/
-                    /*break;*/
+                case 'N': // null byte character
+                    printf("\\0");
+                    break;
                 case 's': // Sunrise time
                     printf("%s", getValue("sun", "rise", s));
                     break;
@@ -279,10 +279,10 @@ int main(int argc, char **argv){
                     printf("%s", getValue("temperature", "value", s));  
                     break;
                 case 'T': // Current Temperature in C 
-                    printf("%s", getValue("temperature", "value", s)); // Conversion needs to be added 
+                    printf("%.2f", atoi(getValue("temperature", "value", s)) - 273.15); 
                     break;
                 case 'f': // Current Temperature in F
-                    printf("%s", getValue("temperature", "value", s));  // Conversion needs to be added
+                    printf("%.2f", ((1.8 * (atoi(getValue("temperature", "value", s)) - 273.15)) + 32));  // Conversion needs to be added
                     break;
                 case 'h': // Current Humidity
                     printf("%s", getValue("humidity", "value", s));
