@@ -1,3 +1,16 @@
+/*
+ *      Weather by Prodge
+ *      
+ *      Release version 1.0
+ *
+ *      Github: https://github.com/Prodge/weather
+ *      Website: http://prodge.net
+ *
+ *      See readme.md for information on how to use
+ *      Or use 'man weather'
+ *
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -5,6 +18,8 @@
 #include <string.h>
 #include <curl/curl.h>
 #include <getopt.h>
+#include <unistd.h>
+#include <ctype.h>
 
 struct string {
     char *ptr;
@@ -303,29 +318,32 @@ int main(int argc, char **argv){
     /*Setting up core variables*/
     char *city;
     char *url = ""; 
-    int subscribe = 0; // set to 0 for no subscribe
+    int subscribe = 0;
     int localType = 0; // set to 0 for inadequate input, 1 for city, 2 for coords
     struct coords coord;
     char *format;
     int c;
     /*Reading user args*/
-    while((c = getopt(argc, argv, "c:C:s:f:")) != -1){
+    while((c = getopt(argc, argv, "c:C:s:S:f:")) != -1){
         switch(c){
-            case 's':
+            case 's':   //Subscribe in seconds
                 subscribe = atoi(optarg);
                 printf("Subscribe: %i\n", subscribe);
                 break;
-            case 'c':
-                city = malStrCpy(optarg);       //Need to make sure this is lowercase
+            case 'c':   //City
+                city = malStrCpy(optarg);
+                for(int i=0; i < strlen(city); i++){ //converting to lowercase
+                    city[i] = tolower(city[i]);
+                }
                 localType = 1;
                 url = getUrlCity(url, city);
                 break;
-            case 'C':
+            case 'C':   //Coords
                 coord = getCoords(optarg);
                 url = getUrlCoords(url, coord);
                 localType = 2;
                 break;
-            case 'f':
+            case 'f':   //Format String
                 format = malStrCpy(optarg);
                 printf("Format String: %s\n", format);
                 break;
@@ -335,9 +353,16 @@ int main(int argc, char **argv){
         fprintf(stderr, "You did not enter enough information.. A city or coordinates are required.\n");
         exit( EXIT_FAILURE );
     }
-    struct string s = scrape(url, s); //scraping the desired url into a string 's'
-    
-    output(s, format, url);
-
-    free(s.ptr);
+    if(subscribe == 0){ //Subscribe was not set and will therefore only print once
+        struct string s = scrape(url, s); //scraping the desired url into a string 's'
+        output(s, format, url);
+        free(s.ptr);
+    }else{
+        while(true){
+        struct string s = scrape(url, s); //scraping the desired url into a string 's'
+        output(s, format, url);
+        free(s.ptr);
+        sleep(subscribe);
+        }
+    }
 }
