@@ -48,22 +48,22 @@ Weather uses the openweathermap.org API http://openweathermap.org/current
     - %U: Time the weather information was last updated
     - %%: Will print a '%'
 - Examples:
-    ```
-    weather -c london -s 100 -f "%c:%t"
-    London:283.77
-    ```
-    ```
-    weather -c london -f "The Sun rose today in %c at %s and will set at %S"
-    The Sun rose today in London at 2014-12-17T08:01:29 and will set at 2014-12-17T15:52:10
-    ```
-    ```
-    weather -C "46,-60" -f "Location: %c  Air Pressure: %phpa  Raining: %r"
-    Location: Broughton  Air Pressure:  1019hpa  Raining: no
-    ```
-    ```
-    weather -C "41,-74" -f "It is %i at %c. Wind is %W in a %D direction"
-    It is light rain at Harrington Park. Wind is Calm in a West-southwest direction
-    ```
+```
+weather -c london -s 100 -f "%c:%t"
+London:283.77
+```
+```
+weather -c london -f "The Sun rose today in %c at %s and will set at %S"
+The Sun rose today in London at 2014-12-17T08:01:29 and will set at 2014-12-17T15:52:10
+```
+```
+weather -C "46,-60" -f "Location: %c  Air Pressure: %phpa  Raining: %r"
+Location: Broughton  Air Pressure:  1019hpa  Raining: no
+```
+```
+weather -C "41,-74" -f "It is %i at %c. Wind is %W in a %D direction"
+It is light rain at Harrington Park. Wind is Calm in a West-southwest direction
+```
 
 ####Use with Bar/Panel
 - Coming Soon
