@@ -203,43 +203,7 @@ char *malStrCpy(char *s){
     return dest;
 }
 
-int main(int argc, char **argv){
-    /*Setting up core variables*/
-    char *city;
-    char *url = ""; 
-    int subscribe = 0; // set to 0 for no subscribe
-    int localType = 0; // set to 0 for inadequate input, 1 for city, 2 for coords
-    struct coords coord;
-    char *format;
-    int c;
-    /*Reading user args*/
-    while((c = getopt(argc, argv, "c:C:s:f:")) != -1){
-        switch(c){
-            case 's':
-                subscribe = atoi(optarg);
-                printf("Subscribe: %i\n", subscribe);
-                break;
-            case 'c':
-                city = malStrCpy(optarg);       //Need to make sure this is lowercase
-                localType = 1;
-                url = getUrlCity(url, city);
-                break;
-            case 'C':
-                coord = getCoords(optarg);
-                url = getUrlCoords(url, coord);
-                localType = 2;
-                break;
-            case 'f':
-                format = malStrCpy(optarg);
-                printf("Format String: %s\n", format);
-                break;
-        }
-    }
-    if(localType == 0){ //Recieved no location information
-        fprintf(stderr, "You did not enter enough information.. A city or coordinates are required.\n");
-        exit( EXIT_FAILURE );
-    }
-    struct string s = scrape(url, s); //scraping the desired url into a string 's'
+void output(struct string s, char *format, char *url){
     int thisChar = 0; 
     while(true){
         char character = ' ';
@@ -282,7 +246,7 @@ int main(int argc, char **argv){
                     printf("%.2f", atoi(getValue("temperature", "value", s)) - 273.15); 
                     break;
                 case 'f': // Current Temperature in F
-                    printf("%.2f", ((1.8 * (atoi(getValue("temperature", "value", s)) - 273.15)) + 32));  // Conversion needs to be added
+                    printf("%.2f", ((1.8 * (atoi(getValue("temperature", "value", s)) - 273.15)) + 32));
                     break;
                 case 'h': // Current Humidity
                     printf("%s", getValue("humidity", "value", s));
@@ -333,5 +297,47 @@ int main(int argc, char **argv){
             break;
         }
     }
+}
+
+int main(int argc, char **argv){
+    /*Setting up core variables*/
+    char *city;
+    char *url = ""; 
+    int subscribe = 0; // set to 0 for no subscribe
+    int localType = 0; // set to 0 for inadequate input, 1 for city, 2 for coords
+    struct coords coord;
+    char *format;
+    int c;
+    /*Reading user args*/
+    while((c = getopt(argc, argv, "c:C:s:f:")) != -1){
+        switch(c){
+            case 's':
+                subscribe = atoi(optarg);
+                printf("Subscribe: %i\n", subscribe);
+                break;
+            case 'c':
+                city = malStrCpy(optarg);       //Need to make sure this is lowercase
+                localType = 1;
+                url = getUrlCity(url, city);
+                break;
+            case 'C':
+                coord = getCoords(optarg);
+                url = getUrlCoords(url, coord);
+                localType = 2;
+                break;
+            case 'f':
+                format = malStrCpy(optarg);
+                printf("Format String: %s\n", format);
+                break;
+        }
+    }
+    if(localType == 0){ //Recieved no location information
+        fprintf(stderr, "You did not enter enough information.. A city or coordinates are required.\n");
+        exit( EXIT_FAILURE );
+    }
+    struct string s = scrape(url, s); //scraping the desired url into a string 's'
+    
+    output(s, format, url);
+
     free(s.ptr);
 }
