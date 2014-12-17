@@ -1,0 +1,125 @@
+.\" Manpage for weather.
+.\" Contact prodge@prodge.net to correct errors or typos.
+.\" Github: https://github.com/Prodge/weather
+.\" Website: http://prodge.net
+.TH Weather 1 "17 Dec 2014" "Version1.0" "Weather by Prodge"
+
+.SH NAME
+\fBweather\fR \- Returns current weather information in a formattable string
+
+.SH SYNOPSIS
+weather [\fB-c\fR \fIcity\fR] [\fB-C\fR \fI"Coordinates"\fR] [\fB-s\fR \fIsecs\fR] [\fB-f\fR \fI"FormatString"\fR]
+
+.SH DESCRIPTION
+Weather is primarily written for use with bar using baskerville's panel scripts for bspwm (https://github.com/baskerville/bspwm/tree/master/examples/panel) however you can use it for whatever you like.
+
+Weather uses the openweathermap.org API http://openweathermap.org/current.
+
+You can find various guides for using weather at https://github.com/Prodge/weather.
+
+.SH OPTIONS
+.TP
+.BR \-s " " \fISeconds\fR
+(Subscribe) will ping for and reprint your specified weather information every [sec] seconds
+.TP
+.BR \-c " " \fICity\fR
+Specifies the city to get weather information for
+.TP
+.BR \-C " " \fI"lat,lon"\fR
+Specifies the coordinates to get weather information for (coordinates will overide the city if both are used)
+.TP
+.BR \-f " " \fI"Format"\fR
+Specifies the output format (see format specifiers below). Anything character that is not preceded by a '%' will be simply printed out as it is
+
+.SH FORMAT SPECIFIERS
+.TP 
+\fB%c\fR City Name
+.TP 
+\fB%C\fR Coordinates
+.TP 
+\fB%l\fR Latitude
+.TP 
+\fB%L\fR Longitude
+.TP 
+\fB%n\fR New line
+.TP 
+\fB%u\fR The URL that the information was scraped from
+.TP 
+\fB%N\fR Null byte character
+.TP 
+\fB%s\fR Sunrise time
+.TP 
+\fB%S\fR Sunset time
+.TP 
+\fB%t\fR Temperature in Kelvin
+.TP 
+\fB%T\fR Temperature in Celsius
+.TP 
+\fB%f\fR Temperature in Fahrenheit
+.TP 
+\fB%h\fR Humidity Percentage
+.TP 
+\fB%p\fR Air Pressure
+.TP 
+\fB%w\fR Wind Speed
+.TP 
+\fB%W\fR Wind Descriptor eg: "Fresh Breeze"
+.TP 
+\fB%d\fR Wind Direction abreviated
+.TP 
+\fB%D\fR Wind Direction
+.TP 
+\fB%a\fR Wind Direction Angle
+.TP 
+\fB%r\fR Raining (yes/no)
+.TP 
+\fB%k\fR Cloud Coverage Percentage
+.TP 
+\fB%K\fR Cloud Coverage Descriptor eg: "clear sky"
+.TP 
+\fB%i\fR Weather Descriptor eg\fR "Sky is Clear"
+.TP 
+\fB%U\fR Time the weather information was last updated
+.TP 
+\fB%%\fR Will print a 'fB%'
+
+.SH EXAMPLES
+\fI1.\fR
+.TP 
+\fBweather\fR \fB-c\fR london \fB-s\fR 100 \fB-f\fR "%c:%t"
+.TP 
+London:283.77
+.TP 
+\fI2.\fR  
+.TP 
+\fBweather\fR \fB-c\fR london \fB-f\fR "The Sun rose today in %c at %s and will set at %S"
+.TP 
+The Sun rose today in London at 2014-12-17T08:01:29 and will set at 2014-12-17T15:52:10
+.TP 
+\fI3.\fR 
+.TP 
+\fBweather\fR \fB-C\fR "46,-60" \fB-f\fR "Location: %c  Air Pressure: %phpa  Raining: %r"
+.TP 
+Location: Broughton  Air Pressure:  1019hpa  Raining: no
+.TP
+\fI4.\fR 
+.TP 
+\fBweather\fR \fB-C\fR "41,-74" \fB-f\fR "It is %i at %c. Wind is %W in a %D direction"
+.TP 
+It is light rain at Harrington Park. Wind is Calm in a West-southwest direction
+
+.SH BUGS
+.TP 
+\- Coordinates cannot contain a decimal point
+.TP 
+\- If a location is not found, the message returned is "Could not find given class in function getValue()"
+
+.SH AUTHOR
+.TP 
+\fBProdge\fR
+.TP 
+\fIEmail\fR: prodge@prodge.net
+.TP 
+\fIGithub\fR: https://github.com/Prodge/weather
+.TP 
+\fIWebsite\fR: http://prodge.net
